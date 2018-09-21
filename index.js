@@ -1,4 +1,4 @@
-import { Observable, from, Subject, asyncScheduler, interval } from 'rxjs';
+import { Observable, from, fromEvent, Subject, asyncScheduler, interval } from 'rxjs';
 import { map, filter, reduce, observeOn, flatMap, switchMap, take } from 'rxjs/operators'; // eslint-disable-line
 
 from([1, 2, 3, 4, 5])
@@ -168,6 +168,28 @@ const combined$ = outer$.pipe(switchMap(x => {
 }));
 
 combined$.subscribe(result => console.log(`${result}`));
+
+// fromEvent
+let click = 0;
+document.addEventListener('click', function registerClicks(e) { // eslint-disable-line
+	if (click <= 10) {
+		if (e.clientX > window.innerWidth / 2) {
+			console.log(e.clientX, e.clientY);
+			click += 1;
+		}
+	} else {
+		document.removeEventListener('click', registerClicks); // eslint-disable-line
+	}
+});
+
+fromEvent(document, 'click') // eslint-disable-line
+	.pipe(
+		filter(e => e.clientX > window.innerWidth / 2),
+		take(10)
+	)
+	.subscribe(e => console.log(e.clientX, e.clientY));
+
+
 
 // function obserable(observ, next, done) {
 // 	for (const letter of observ) {
