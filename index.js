@@ -1,4 +1,4 @@
-import { Observable, from, fromEvent, Subject, asyncScheduler, interval } from 'rxjs';
+import { Observable, from, fromEvent, Subject, asyncScheduler, interval, BehaviorSubject, ReplaySubject, AsyncSubject } from 'rxjs';
 import { map, filter, reduce, observeOn, flatMap, switchMap, take } from 'rxjs/operators'; // eslint-disable-line
 
 from([1, 2, 3, 4, 5])
@@ -189,7 +189,81 @@ fromEvent(document, 'click') // eslint-disable-line
 	)
 	.subscribe(e => console.log(e.clientX, e.clientY));
 
+// BehaviorSubject 1
+const behaviorSubject = new BehaviorSubject();
 
+behaviorSubject.subscribe(data => {
+	console.log('Behavior1. First subscribe: ', data);
+});
+
+behaviorSubject.next(Math.random());
+behaviorSubject.next(Math.random());
+behaviorSubject.next(Math.random());
+
+behaviorSubject.subscribe(data => {
+	console.log('Behavior1. Second subscribe: ', data);
+});
+
+behaviorSubject.next(Math.random());
+console.log('Behavior1. Value: ', behaviorSubject.value);
+
+// BehaviorSubject 2
+const behaviorSubject2 = new BehaviorSubject(Math.random());
+
+behaviorSubject2.subscribe(data => {
+	console.log('Behavior2. Subscribe: ', data);
+});
+
+// ReplaySubject 1
+const replaySubject = new ReplaySubject(2);
+
+replaySubject.subscribe(data => {
+	console.log('ReplaySubject1. First subscribe: ', data);
+});
+
+replaySubject.next(Math.random());
+replaySubject.next(Math.random());
+replaySubject.next(Math.random());
+replaySubject.next(Math.random());
+
+replaySubject.subscribe(data => {
+	console.log('ReplaySubject1. Second subscribe: ', data);
+});
+
+replaySubject.next(Math.random());
+
+// ReplaySubject 2
+// const replaySubject2 = new ReplaySubject(2, 100);
+
+// replaySubject2.subscribe(data => {
+// 	console.log('ReplaySubject2. First subscribe: ', data);
+// });
+
+// setInterval(() => replaySubject2.next(Math.random()), 200);
+
+// setTimeout(() => {
+// 	replaySubject2.subscribe(data => {
+// 		console.log('ReplaySubject2. Second subscribe:', data);
+// 	});
+// }, 1000);
+
+// AsyncSubject
+const asyncSubject = new AsyncSubject();
+
+asyncSubject.subscribe(data => {
+	console.log('AsyncSubject. First subscribe: ', data);
+});
+
+asyncSubject.next(Math.random());
+asyncSubject.next(Math.random());
+asyncSubject.next(Math.random());
+
+asyncSubject.subscribe(data => {
+	console.log('AsyncSubject. Second subscribe: ', data);
+});
+
+asyncSubject.next(Math.random());
+asyncSubject.complete();
 
 // function obserable(observ, next, done) {
 // 	for (const letter of observ) {
